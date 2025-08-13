@@ -1,0 +1,58 @@
+import pyautogui
+import pyperclip
+import time
+from tqdm import tqdm
+import datetime
+
+# Lista dos dados que você quer colar na barra de pesquisa
+dados = ["41250605097254000193550010001208281410731284"]
+# Coordenadas da tela
+barra_pesquisa_x = 509
+barra_pesquisa_y = 519
+botao_danfe_x = 941
+botao_danfe_y = 512
+botao_xml_x = 728
+botao_xml_y = 287
+
+print("Você tem 5 segundos para organizar a tela...")
+time.sleep(10)
+
+# Estimar tempo por item (ajuste se quiser mais preciso)
+tempo_por_item = 7  # segundos aproximados por ciclo (2+1+1+2 + margem)
+
+# Barra de progresso
+inicio = datetime.datetime.now()
+
+for chave in tqdm(dados, desc="Processando chaves", unit="chave", total=len(dados)):
+    t0 = time.time()
+
+    # Clicar na barra de pesquisa
+    pyautogui.click(barra_pesquisa_x, barra_pesquisa_y)
+    time.sleep(0.3)
+
+    # Colar a chave
+    pyperclip.copy(chave)
+    pyautogui.hotkey('ctrl', 'v')
+    time.sleep(0.3)
+
+    # Pressionar ENTER
+    pyautogui.press('enter')
+    time.sleep(1)  # espera o site carregar
+
+    # Baixar DANFE
+    pyautogui.click(botao_danfe_x, botao_danfe_y)
+    time.sleep(1)
+
+    # Baixar XML
+    pyautogui.click(botao_xml_x, botao_xml_y)
+    time.sleep(2)
+
+    # Atualiza a página
+    pyautogui.press('f5')
+    time.sleep(2)
+
+    # Atualiza estimativa (tqdm faz isso automaticamente)
+
+fim = datetime.datetime.now()
+duracao = fim - inicio
+print(f"Finalizado em {duracao}.")
